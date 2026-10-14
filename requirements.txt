@@ -1,0 +1,6 @@
+selenium
+scrapingbee>=2.2
+parsel
+lxml
+cssselect
+requests

@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "rules": {
+    "description": {"css": "span[itemprop='about']",
+                    "attr": null, "type": "str"},
+    "stars": {"css": "a.social-count.js-social-count",
+              "attr": null, "type": "int"},
+    "forks": {"css": "a.social-count[href$='/network/members']",
+              "attr": null, "type": "int"},
+    "watchers": {"css": "a.social-count[href$='/watchers']",
+                 "attr": null, "type": "int"}
+  },
+  "history": []
+}

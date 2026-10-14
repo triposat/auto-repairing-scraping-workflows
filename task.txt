@@ -1,0 +1,11 @@
+A production scraper broke. The fields description, stars, forks, and
+watchers failed validation. rules.json holds the extraction rules that
+autorepair.py applies (read autorepair.py to see the rule format).
+
+Fix rules.json so that every field returns the exact value from the page.
+Do not edit any .py file. Saved copies of the target page and a holdout
+page from the same template are in fixtures/. You may use the ScrapingBee
+MCP tools to look at the live pages. Avoid hashed class names.
+
+When you are done, run: python verify.py
+It must print PASS. If it prints FAIL, fix rules.json and run it again.

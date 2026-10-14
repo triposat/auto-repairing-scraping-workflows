@@ -1,0 +1,59 @@
+# Runs the examples against the live pages once a month.
+# A failure means a site or library changed and the code needs an update.
+# Without the SCRAPINGBEE_API_KEY secret (for example, in a fork), the live
+# job is skipped with a warning instead of failing.
+name: Monthly test
+
+on:
+  schedule:
+    - cron: "0 6 1 * *"
+  workflow_dispatch:
+
+jobs:
+  offline:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - run: python -m pip install -r requirements.txt
+      - name: Strict parse rejects "16.5k" and keeps cents
+        run: diff <(printf 'None\n1299.99\n') <(python check_strict.py)
+
+  key:
+    runs-on: ubuntu-24.04
+    outputs:
+      ok: ${{ steps.check.outputs.ok }}
+    steps:
+      - id: check
+        env:
+          SCRAPINGBEE_API_KEY: ${{ secrets.SCRAPINGBEE_API_KEY }}
+        run: |
+          if [ -n "$SCRAPINGBEE_API_KEY" ]; then
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning::Add the SCRAPINGBEE_API_KEY secret to run the live checks."
+          fi
+
+  live:
+    needs: [offline, key]
+    if: needs.key.outputs.ok == 'true'
+    runs-on: ubuntu-24.04
+    env:
+      SCRAPINGBEE_API_KEY: ${{ secrets.SCRAPINGBEE_API_KEY }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - run: python -m pip install -r requirements.txt
+      - name: Let headless Chrome use its sandbox on Ubuntu 24.04
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+      - name: Repair from the 2019 rules, then a run with no AI calls
+        run: |
+          python run.py
+          python run.py | tee "$RUNNER_TEMP/second-run.txt"
+          grep -q "broken fields: \[\]" "$RUNNER_TEMP/second-run.txt"
+      - name: Walmart product page still loads through fetch()
+        run: python check_gate.py

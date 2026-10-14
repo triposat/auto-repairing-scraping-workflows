@@ -1,0 +1,21 @@
+# python run.py (first run: repairs the 2019 rules)
+fetched via selenium, broken fields: ['description', 'stars', 'forks', 'watchers']
+  description: promoted payload.codeViewRepoRoute.overview.sidebarAboutData.description
+  stars: promoted payload.codeViewRepoRoute.overview.sidebarAboutData.stargazerCount
+  forks: promoted payload.codeViewRepoRoute.overview.sidebarAboutData.forksCount
+  watchers: promoted payload.codeViewRepoRoute.overview.sidebarAboutData.watcherCount
+{
+  "description": "A browser automation framework and ecosystem.",
+  "stars": 34539,
+  "forks": 8719,
+  "watchers": 1249
+}
+
+# python run.py (second run: no AI calls)
+fetched via selenium, broken fields: []
+{
+  "description": "A browser automation framework and ecosystem.",
+  "stars": 34539,
+  "forks": 8719,
+  "watchers": 1249
+}

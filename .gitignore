@@ -1,0 +1,7 @@
+__pycache__/
+.venv/
+.env
+mcp.json
+fixtures/
+needs_review.json
+books_rules.json
